@@ -6,10 +6,10 @@ React Flow Editor.
 
 [npm-image]: http://img.shields.io/npm/v/react-flow-editor2.svg?style=flat-square
 [npm-url]: http://npmjs.org/package/react-flow-editor2
-[circleci-image]: https://img.shields.io/circleci/build/github/react-component/field-form/master.svg?style=flat-square
-[circleci-url]: https://circleci.com/gh/react-component/field-form/tree/master
-[coveralls-image]: https://img.shields.io/codecov/c/github/react-component/field-form/master.svg?style=flat-square
-[coveralls-url]: https://codecov.io/gh/react-component/field-form
+[circleci-image]: https://img.shields.io/circleci/build/github/hengkx/react-flow-editor2/master.svg?style=flat-square
+[circleci-url]: https://circleci.com/gh/hengkx/react-flow-editor2/tree/master
+[coveralls-image]: https://img.shields.io/codecov/c/github/hengkx/react-flow-editor2/master.svg?style=flat-square
+[coveralls-url]: https://codecov.io/gh/hengkx/react-flow-editor2
 [node-image]: https://img.shields.io/badge/node.js-%3E=_6.0-green.svg?style=flat-square
 [node-url]: http://nodejs.org/download/
 [download-image]: https://img.shields.io/npm/dm/react-flow-editor2.svg?style=flat-square

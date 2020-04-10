@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "name": "react-flow-editor2",
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@now/static-build",
+      "config": { "distDir": ".doc" }
+    }
+  ]
+}

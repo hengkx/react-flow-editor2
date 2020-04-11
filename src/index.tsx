@@ -2,8 +2,9 @@ import React, { useState, useEffect } from 'react';
 // import { PlayCircleOutlined, LogoutOutlined, ForkOutlined } from '@ant-design/icons';
 import FlowNode from './FlowNode';
 import './less/index.less';
-import { getTargetPosition, getSvgPath, getNodeAnchorPosition, getNodeDom } from './utils';
+import { getTargetPosition, getNodeAnchorPosition, getNodeDom } from './utils';
 import { FlowNodeAnchorPosition, Direction } from './interface';
+import { getLine } from './utils/svg';
 
 interface FlowNode {
   id: string;
@@ -56,17 +57,17 @@ const ReactFlowEditor: React.FC<ReactFlowEditorProps> = ({ data }) => {
           const { current } = itemsRef.current[i];
           if (item.source.id === id) {
             const source = getNodeAnchorPosition(selectedNode.current, item.source.direction);
-            current.childNodes[0].setAttribute('d', getSvgPath(source, item.target));
+            current.childNodes[0].setAttribute('d', getLine(source, item.target));
           } else if (item.target.id === id) {
             const target = getNodeAnchorPosition(selectedNode.current, item.target.direction);
-            current.childNodes[0].setAttribute('d', getSvgPath(item.source, target));
+            current.childNodes[0].setAttribute('d', getLine(item.source, target));
           }
         }
       } else {
         const { current } = itemsRef.current[itemsRef.current.length - 1];
         const { source } = edges[edges.length - 1];
         const targetPosition = getTargetPosition(e, source.id);
-        current.childNodes[0].setAttribute('d', getSvgPath(source, targetPosition));
+        current.childNodes[0].setAttribute('d', getLine(source, targetPosition));
       }
     };
     if (moveEdge || selectedNode) {
@@ -118,9 +119,9 @@ const ReactFlowEditor: React.FC<ReactFlowEditorProps> = ({ data }) => {
       const item = edges[i];
       const { current } = itemsRef.current[i];
       if (item.source.id === id) {
-        current.childNodes[0].setAttribute('d', getSvgPath({ ...item.source, x, y }, item.target));
+        current.childNodes[0].setAttribute('d', getLine({ ...item.source, x, y }, item.target));
       } else if (item.target.id === id) {
-        current.childNodes[0].setAttribute('d', getSvgPath(item.source, { ...item.target, x, y }));
+        current.childNodes[0].setAttribute('d', getLine(item.source, { ...item.target, x, y }));
       }
     }
   };
@@ -161,7 +162,7 @@ const ReactFlowEditor: React.FC<ReactFlowEditorProps> = ({ data }) => {
       <svg ref={svgRef}>
         {edges.map((item, index) => (
           <g key={index} ref={itemsRef.current[index]}>
-            <path stroke="#0db3a6" strokeWidth="2" fill="#fff" fillOpacity="0" />
+            <path stroke="#0db3a6" strokeWidth="2" fillOpacity={0} />
           </g>
         ))}
       </svg>

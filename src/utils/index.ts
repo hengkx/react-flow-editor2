@@ -92,6 +92,18 @@ export function getTargetPosition(
 }
 
 /**
+ * 是否需要反转path
+ *
+ * @param {FlowNodeAnchorPosition} source
+ * @param {FlowNodeAnchorPosition} target
+ * @returns
+ */
+function isReversePath(source: FlowNodeAnchorPosition, target: FlowNodeAnchorPosition) {
+  const direction = `${source.direction}${target.direction}`;
+  return ['RT', 'BT', 'LT', 'BR', 'LR', 'LB'].indexOf(direction) !== -1;
+}
+
+/**
  * 获取线段路径(代码需要重构)
  *
  * @export
@@ -104,45 +116,21 @@ export function getSvgPath(
   target: FlowNodeAnchorPosition,
   minRange = 40,
 ): string {
-  let { x, y, direction } = source;
-  let { x: endX, y: endY, direction: endDirection } = target;
-  let reverse = false;
-  if (
-    (direction === 'R' && endDirection === 'T') ||
-    (direction === 'B' && endDirection === 'T') ||
-    (direction === 'L' && endDirection === 'T') ||
-    (direction === 'B' && endDirection === 'R') ||
-    (direction === 'L' && endDirection === 'R') ||
-    (direction === 'L' && endDirection === 'B')
-  ) {
-    x = target!.x;
-    y = target!.y;
-    direction = target!.direction;
-    endX = source.x;
-    endY = source.y;
-    endDirection = source.direction;
-    reverse = true;
-  }
+  const reverse = isReversePath(source, target);
+  const { x, y, direction } = reverse ? target : source;
+  const { x: endX, y: endY, direction: endDirection } = reverse ? source : target;
 
   let paths = [`${reverse ? 'L' : 'M'}${x},${y}`];
   const midX = (x + endX) / 2;
   const midY = (y + endY) / 2;
   const margin = endDirection ? minRange / 2 : minRange;
   if (direction === endDirection) {
-    if (direction === 'T') {
-      const value = Math.min(y, endY) - margin;
+    if (direction === 'T' || direction === 'B') {
+      const value = direction === 'T' ? Math.min(y, endY) - margin : Math.max(y, endY) + margin;
       paths.push(`L${x},${value}`);
       paths.push(`L${endX},${value}`);
-    } else if (direction === 'B') {
-      const value = Math.max(y, endY) + margin;
-      paths.push(`L${x},${value}`);
-      paths.push(`L${endX},${value}`);
-    } else if (direction === 'R') {
-      const value = Math.max(x, endX) + margin;
-      paths.push(`L${value},${y}`);
-      paths.push(`L${value},${endY}`);
     } else {
-      const value = Math.min(x, endX) - margin;
+      const value = direction === 'R' ? Math.max(x, endX) + margin : Math.min(x, endX) - margin;
       paths.push(`L${value},${y}`);
       paths.push(`L${value},${endY}`);
     }
@@ -150,7 +138,7 @@ export function getSvgPath(
     if (direction === 'T') {
       const value = Math.min(y - margin, midY);
       paths.push(`L${x},${value}`);
-      if (endY >= y && endDirection === 'B') {
+      if (endY >= y - minRange && endDirection === 'B') {
         paths.push(`L${midX},${value}`);
         paths.push(`L${midX},${endY + margin}`);
         paths.push(`L${endX},${endY + margin}`);
@@ -160,7 +148,7 @@ export function getSvgPath(
     } else {
       const value = Math.max(x + margin, midX);
       paths.push(`L${value},${y}`);
-      if (endX <= x && endDirection === 'L') {
+      if (endX <= x + minRange && endDirection === 'L') {
         paths.push(`L${value},${midY}`);
         paths.push(`L${endX - margin},${midY}`);
         paths.push(`L${endX - margin},${endY}`);

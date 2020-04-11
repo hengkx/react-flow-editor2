@@ -106,6 +106,12 @@ describe('top', () => {
       expect(path).toBe('M100,100 L100,75 L200,75 L200,50');
     });
 
+    it('The target is at the top right of the source and less than margin', async () => {
+      const target = { x: 200, y: 90, direction: 'B' };
+      const path = getSvgPath(source, target);
+      expect(path).toBe('M100,100 L100,80 L150,80 L150,110 L200,110 L200,90');
+    });
+
     it('Target and source on horizontal line', async () => {
       const target = { x: 200, y: 100, direction: 'B' };
       const path = getSvgPath(source, target);

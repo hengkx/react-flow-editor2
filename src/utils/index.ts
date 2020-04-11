@@ -103,7 +103,6 @@ export function getSvgPath(
   target: FlowNodeAnchorPosition,
   minRange = 40,
 ): string {
-  //   console.log(source, target);
   const { x, y, direction } = source;
   const { x: endX, y: endY, direction: endDirection } = target;
   const paths = [`M${x},${y}`];
@@ -173,94 +172,57 @@ export function getSvgPath(
         paths.push(`L${value},${endY}`);
       }
     }
-  } else if (direction === 'T') {
+  } else if (direction === 'T' || direction === 'B') {
     if (
-      (endDirection === 'R' && endX < x && endY < y) ||
-      (endDirection === 'L' && endX > x && endY < y)
+      (direction === 'T' && endDirection === 'R' && endX < x && endY < y) ||
+      (direction === 'T' && endDirection === 'L' && endX > x && endY < y) ||
+      (direction === 'B' && endDirection === 'R' && endX < x && endY > y) ||
+      (direction === 'B' && endDirection === 'L' && endX > x && endY > y)
     ) {
       paths.push(`L${x},${endY}`);
     } else {
-      const value = Math.min(y - margin, midY);
-      paths.push(`L${x},${value}`);
-      if (endDirection === 'R') {
-        const v = Math.max(midX, endX + margin);
-        paths.push(`L${v},${value}`);
-        paths.push(`L${v},${endY}`);
-      } else {
-        const v = Math.min(midX, endX - margin);
-        paths.push(`L${v},${value}`);
-        paths.push(`L${v},${endY}`);
+      let value = 0;
+      if (direction === 'T') {
+        value = Math.min(y - margin, midY);
+      } else if (direction === 'B') {
+        value = Math.max(y + margin, midY);
       }
-    }
-  } else if (direction === 'B') {
-    if (
-      (endDirection === 'R' && endX < x && endY > y) ||
-      (endDirection === 'L' && endX > x && endY > y)
-    ) {
-      paths.push(`L${x},${endY}`);
-    } else {
-      const value = Math.max(y + margin, midY);
       paths.push(`L${x},${value}`);
+      let mx = 0;
       if (endDirection === 'R') {
-        const v = Math.max(midX, endX + margin);
-        paths.push(`L${v},${value}`);
-        paths.push(`L${v},${endY}`);
+        mx = Math.max(midX, endX + margin);
       } else {
-        const v = Math.min(midX, endX - margin);
-        paths.push(`L${v},${value}`);
-        paths.push(`L${v},${endY}`);
+        mx = Math.min(midX, endX - margin);
       }
+      paths.push(`L${mx},${value}`);
+      paths.push(`L${mx},${endY}`);
     }
-  } else if (direction === 'R') {
+  } else if (direction === 'R' || direction === 'L') {
     if (
-      (endDirection === 'T' && endX > x && endY > y) ||
-      (endDirection === 'B' && endX > x && endY < y)
+      (direction === 'R' && endDirection === 'T' && endX > x && endY > y) ||
+      (direction === 'R' && endDirection === 'B' && endX > x && endY < y) ||
+      (direction === 'L' && endDirection === 'T' && endX < x && endY > y) ||
+      (direction === 'L' && endDirection === 'B' && endX < x && endY < y)
     ) {
       paths.push(`L${endX},${y}`);
     } else {
-      const value = Math.max(x + margin, midX);
-      paths.push(`L${value},${y}`);
-      if (endDirection === 'T') {
-        const v = Math.min(midY, endY - margin);
-        paths.push(`L${value},${v}`);
-        paths.push(`L${endX},${v}`);
-      } else {
-        const v = Math.max(midY, endY + margin);
-        paths.push(`L${value},${v}`);
-        paths.push(`L${endX},${v}`);
+      let value = 0;
+      if (direction === 'R') {
+        value = Math.max(x + margin, midX);
+      } else if (direction === 'L') {
+        value = Math.min(x - margin, midX);
       }
-    }
-  } else if (direction === 'L') {
-    if (
-      (endDirection === 'T' && endX < x && endY > y) ||
-      (endDirection === 'B' && endX < x && endY < y)
-    ) {
-      paths.push(`L${endX},${y}`);
-    } else {
-      const value = Math.min(x - margin, midX);
       paths.push(`L${value},${y}`);
+      let my = 0;
       if (endDirection === 'T') {
-        const v = Math.min(midY, endY - margin);
-        paths.push(`L${value},${v}`);
-        paths.push(`L${endX},${v}`);
+        my = Math.min(midY, endY - margin);
       } else {
-        const v = Math.max(midY, endY + margin);
-        paths.push(`L${value},${v}`);
-        paths.push(`L${endX},${v}`);
+        my = Math.max(midY, endY + margin);
       }
+      paths.push(`L${value},${my}`);
+      paths.push(`L${endX},${my}`);
     }
   }
   paths.push(`L${endX},${endY}`);
   return paths.join(' ');
 }
-
-// /**
-//  * 获取Anchor方向
-//  *
-//  * @export
-//  * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} e
-//  * @returns {Direction}
-//  */
-// export function getAnchorDirection(e: React.MouseEvent<HTMLDivElement, MouseEvent>): Direction {
-
-// }

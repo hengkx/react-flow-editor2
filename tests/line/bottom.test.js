@@ -13,7 +13,7 @@ describe('bottom', () => {
     it('Target and source on horizontal line', async () => {
       const target = { x: 200, y: 100, direction: 'T' };
       const path = getSvgPath(source, target);
-      expect(path).toBe('M100,100 L100,120 L200,120 L200,100');
+      expect(path).toBe('M100,100 L100,120 L150,120 L150,80 L200,80 L200,100');
     });
 
     it('The target is at the bottom right of the source', async () => {

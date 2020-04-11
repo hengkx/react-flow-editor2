@@ -3,7 +3,7 @@ import { getSvgPath } from '../../src/utils';
 describe('top', () => {
   const source = { x: 100, y: 100, direction: 'T' };
 
-  describe('T -> T no selected target', () => {
+  describe('not target direction', () => {
     it('The target is at the top right of the source', async () => {
       const target = { x: 200, y: 50 };
       const path = getSvgPath(source, target);

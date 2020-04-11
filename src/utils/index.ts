@@ -138,23 +138,31 @@ export function getSvgPath(
     if (direction === 'T') {
       const value = Math.min(y - margin, midY);
       paths.push(`L${x},${value}`);
-      if (endY >= y - minRange && endDirection === 'B') {
+      if (endY > y - minRange && endDirection === 'B') {
         paths.push(`L${midX},${value}`);
         paths.push(`L${midX},${endY + margin}`);
         paths.push(`L${endX},${endY + margin}`);
       } else {
         paths.push(`L${endX},${value}`);
       }
-    } else {
+    } else if (direction === 'B') {
+      const value = Math.max(y + margin, midY);
+      paths.push(`L${x},${value}`);
+      paths.push(`L${endX},${value}`);
+    } else if (direction === 'R') {
       const value = Math.max(x + margin, midX);
       paths.push(`L${value},${y}`);
-      if (endX <= x + minRange && endDirection === 'L') {
+      if (endX < x + minRange && endDirection === 'L') {
         paths.push(`L${value},${midY}`);
         paths.push(`L${endX - margin},${midY}`);
         paths.push(`L${endX - margin},${endY}`);
       } else {
         paths.push(`L${value},${endY}`);
       }
+    } else if (direction === 'L') {
+      const value = Math.min(x - margin, midX);
+      paths.push(`L${value},${y}`);
+      paths.push(`L${value},${endY}`);
     }
   } else if (direction === 'T' || direction === 'B') {
     if (

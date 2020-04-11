@@ -3,6 +3,38 @@ import { getSvgPath } from '../../src/utils';
 describe('bottom', () => {
   const source = { x: 100, y: 100, direction: 'B' };
 
+  describe('not target direction', () => {
+    it('The target is at the top right of the source', async () => {
+      const target = { x: 200, y: 50 };
+      const path = getSvgPath(source, target);
+      expect(path).toBe('M100,100 L100,140 L200,140 L200,50');
+    });
+
+    it('Target and source on horizontal line', async () => {
+      const target = { x: 200, y: 100 };
+      const path = getSvgPath(source, target);
+      expect(path).toBe('M100,100 L100,140 L200,140 L200,100');
+    });
+
+    it('The target is at the bottom right of the source', async () => {
+      const target = { x: 200, y: 200 };
+      const path = getSvgPath(source, target);
+      expect(path).toBe('M100,100 L100,150 L200,150 L200,200');
+    });
+
+    it('The target is at the top left of the source', async () => {
+      const target = { x: 50, y: 50 };
+      const path = getSvgPath(source, target);
+      expect(path).toBe('M100,100 L100,140 L50,140 L50,50');
+    });
+
+    it('The target is at the bottom left of the source', async () => {
+      const target = { x: 50, y: 200 };
+      const path = getSvgPath(source, target);
+      expect(path).toBe('M100,100 L100,150 L50,150 L50,200');
+    });
+  });
+
   describe('B -> T', () => {
     it('The target is at the top right of the source', async () => {
       const target = { x: 200, y: 50, direction: 'T' };

@@ -1,16 +1,16 @@
-import { Direction, FlowNodeAnchorPosition } from '../interface';
+import { Direction, NodeAnchorPosition } from '../interface';
 
 /**
  * 获取线段的箭头
  *
- * @param {FlowNodeAnchorPosition} source
- * @param {FlowNodeAnchorPosition} target
+ * @param {NodeAnchorPosition} source
+ * @param {NodeAnchorPosition} target
  * @param {number} [minRange=40]
  * @returns {string}
  */
 function getLineArrow(
-  source: FlowNodeAnchorPosition,
-  target: FlowNodeAnchorPosition,
+  source: NodeAnchorPosition,
+  target: NodeAnchorPosition,
   minRange = 40,
 ): string {
   const { x, y, direction } = source;
@@ -90,11 +90,11 @@ export function getArrow(
 /**
  * 是否需要反转path
  *
- * @param {FlowNodeAnchorPosition} source
- * @param {FlowNodeAnchorPosition} target
+ * @param {NodeAnchorPosition} source
+ * @param {NodeAnchorPosition} target
  * @returns
  */
-function isReversePath(source: FlowNodeAnchorPosition, target: FlowNodeAnchorPosition) {
+function isReversePath(source: NodeAnchorPosition, target: NodeAnchorPosition) {
   const direction = `${source.direction}${target.direction}`;
   return ['RT', 'BT', 'LT', 'BR', 'LR', 'LB'].indexOf(direction) !== -1;
 }
@@ -103,13 +103,13 @@ function isReversePath(source: FlowNodeAnchorPosition, target: FlowNodeAnchorPos
  * 获取线段路径(代码需要重构)
  *
  * @export
- * @param {FlowNodeAnchorPosition} source 源节点位置
- * @param {FlowNodeAnchorPosition} target 目标节点位置
+ * @param {NodeAnchorPosition} source 源节点位置
+ * @param {NodeAnchorPosition} target 目标节点位置
  * @returns {string} 路径
  */
 export function getLineNoArrow(
-  source: FlowNodeAnchorPosition,
-  target: FlowNodeAnchorPosition,
+  source: NodeAnchorPosition,
+  target: NodeAnchorPosition,
   minRange = 40,
 ): string {
   const reverse = isReversePath(source, target);
@@ -201,8 +201,8 @@ export function getLineNoArrow(
 }
 
 export function getLine(
-  source: FlowNodeAnchorPosition,
-  target: FlowNodeAnchorPosition,
+  source: NodeAnchorPosition,
+  target: NodeAnchorPosition,
   minRange = 40,
 ): string {
   return `${getLineNoArrow(source, target, minRange)} ${getLineArrow(source, target)}`;

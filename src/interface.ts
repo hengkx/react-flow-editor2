@@ -1,6 +1,6 @@
 export type Direction = 'T' | 'R' | 'B' | 'L';
 
-export interface FlowNodeAnchorPosition {
+export interface NodeAnchorPosition {
   id: string;
   x: number;
   y: number;
@@ -11,3 +11,8 @@ export interface FlowNodeAnchorPosition {
 //   id: string;
 //   direction: Direction;
 // }
+
+export interface Offset {
+  x: number;
+  y: number;
+}

@@ -1,19 +1,21 @@
 import React from 'react';
-import ReactFlowEditor from '../src';
+import ReactFlowEditor, { FlowEditorData } from '../src';
 
-const data = {
+const data: FlowEditorData = {
   nodes: [
-    { id: '1', x: 100, y: 100, type: 'start' },
-    { id: '2', x: 300, y: 60, type: 'end' },
-    // { id: '1', x: 100, y: 300, type: 'start' },
-    // { id: '2', x: 100, y: 60, type: 'end' },
+    { id: `${Date.now()}`, x: 100, y: 100, type: 'start' },
+    { id: '2', x: 100, y: 300, type: 'end' },
   ],
   edges: [],
 };
 
+const handleChange = val => {
+  console.log(val);
+};
+
 const Demo = () => (
   <div>
-    <ReactFlowEditor data={data} />
+    <ReactFlowEditor data={data} onChange={handleChange} />
   </div>
 );
 export default Demo;

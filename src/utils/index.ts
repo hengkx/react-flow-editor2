@@ -1,4 +1,4 @@
-import { Direction, FlowNodeAnchorPosition } from '../interface';
+import { Direction, NodeAnchorPosition, Offset } from '../interface';
 
 /**
  * 获取元素的坐标和宽高
@@ -13,7 +13,7 @@ function getBoundingClientRect(ele: HTMLElement) {
   return { x, y, width, height };
 }
 
-export function getNodeDom(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
+export function getNodeDom(e: React.MouseEvent) {
   const target = e.target as HTMLElement;
   if (target.tagName === 'DIV' && target.className.indexOf('flow-node') !== -1) {
     let ele = target;
@@ -25,10 +25,7 @@ export function getNodeDom(e: React.MouseEvent<HTMLDivElement, MouseEvent>) {
   return undefined;
 }
 
-export function getNodeAnchorPosition(
-  ele: HTMLElement,
-  direction: Direction,
-): FlowNodeAnchorPosition {
+export function getNodeAnchorPosition(ele: HTMLElement, direction: Direction): NodeAnchorPosition {
   const id = ele.getAttribute('data-nid');
   const { x, y, width, height } = getBoundingClientRect(ele);
   switch (direction) {
@@ -46,46 +43,36 @@ export function getNodeAnchorPosition(
 /**
  * 获取目标位置
  *
- * @param {React.MouseEvent<HTMLDivElement, MouseEvent>} e
- * @returns {FlowNodeAnchorPosition}
+ * @param {React.MouseEvent} e
+ * @returns {NodeAnchorPosition}
  */
 export function getTargetPosition(
-  e: React.MouseEvent<HTMLDivElement, MouseEvent>,
+  e: React.MouseEvent,
+  offset: Offset,
   sourceId?: string,
-): FlowNodeAnchorPosition {
-  let endX = e.clientX;
-  let endY = e.clientY;
+): NodeAnchorPosition {
+  const endX = e.clientX - offset.x;
+  const endY = e.clientY - offset.y;
   let direction: Direction;
   let id;
-  const target = e.target as HTMLElement;
-  if (target.tagName === 'DIV' && target.className.indexOf('flow-node') !== -1) {
-    let ele = target;
-    if (target.className !== 'flow-node') {
-      ele = target.parentNode as HTMLElement;
-    }
+  const ele = getNodeDom(e);
+  if (ele) {
     id = ele.getAttribute('data-nid');
     if (sourceId === id) {
       return { id, direction, x: endX, y: endY };
     }
     const { x, y, width, height } = getBoundingClientRect(ele);
     const num = width / 3;
-    if (e.clientX < x + num) {
-      endX = x;
-      endY = y + height / 2;
+    if (endX < x + num) {
       direction = 'L';
-    } else if (e.clientX > x + num * 2) {
-      endX = x + width;
-      endY = y + height / 2;
+    } else if (endX > x + num * 2) {
       direction = 'R';
-    } else if (e.clientY > y + height / 2) {
-      endX = x + width / 2;
-      endY = y + height;
+    } else if (endY > y + height / 2) {
       direction = 'B';
     } else {
-      endX = x + width / 2;
-      endY = y;
       direction = 'T';
     }
+    return getNodeAnchorPosition(ele, direction);
   }
   return { id, direction, x: endX, y: endY };
 }

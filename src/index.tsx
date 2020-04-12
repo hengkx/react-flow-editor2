@@ -30,11 +30,10 @@ interface SelectedNode {
 
 const FlowEditor: React.FC<FlowEditorProps> = ({ data, onChange, onSelectNode }) => {
   const containerRef = React.useRef(null);
-  const svgRef = React.useRef(null);
   const [moveEdge, setMoveEdge] = useState(false);
   const [offset, setOffset] = useState<Offset>();
   const [selectedNode, setSelectedNode] = useState<SelectedNode>();
-  const itemsRef = React.useRef([]);
+  const itemsRef = React.useRef(data.edges.map(() => React.createRef<any>()));
 
   const [edges, setEdges] = useState<FlowEdge[]>(data.edges);
   const [nodes, setNodes] = useState<FlowNode[]>(data.nodes);
@@ -174,10 +173,15 @@ const FlowEditor: React.FC<FlowEditorProps> = ({ data, onChange, onSelectNode })
         {nodes.map(item => (
           <Node key={item.id} {...item} onClick={onSelectNode} />
         ))}
-        <svg ref={svgRef}>
+        <svg>
           {edges.map((item, index) => (
             <g key={index} ref={itemsRef.current[index]}>
-              <path stroke="#40a9ff" strokeWidth="2" fillOpacity={0} />
+              <path
+                stroke="#40a9ff"
+                strokeWidth="2"
+                fillOpacity={0}
+                d={getLine(item.source, item.target)}
+              />
             </g>
           ))}
         </svg>

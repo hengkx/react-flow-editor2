@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Node, { FlowNode } from './Node';
-import { getTargetPosition, getNodeAnchorPosition, getNodeDom } from './utils';
+import { getTargetPosition, getNodeAnchorPosition, getNodeDom, getElementPos } from './utils';
 import { NodeAnchorPosition, Direction, Offset } from './interface';
 import { getLine } from './utils/svg';
 import './less/index.less';
@@ -83,6 +83,7 @@ const FlowEditor: React.FC<FlowEditorProps> = ({ data, onChange, onSelectNode })
   const handleMouseUp = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
     e.stopPropagation();
     const newEdges = [...edges];
+    const newNodes = [...nodes];
     if (selectedNode) {
       const ele = getNodeDom(e);
       if (ele) {
@@ -102,6 +103,10 @@ const FlowEditor: React.FC<FlowEditorProps> = ({ data, onChange, onSelectNode })
           }
         }
       }
+      const node = newNodes.find(p => p.id === selectedNode.id);
+      const pos = getElementPos(selectedNode.current);
+      node.x = pos.x;
+      node.y = pos.y;
       setSelectedNode(undefined);
     } else if (moveEdge) {
       const target = getTargetPosition(e, offset);
@@ -115,7 +120,7 @@ const FlowEditor: React.FC<FlowEditorProps> = ({ data, onChange, onSelectNode })
       setMoveEdge(false);
     }
     setEdges(newEdges);
-    onChange({ nodes, edges: newEdges });
+    onChange({ nodes: newNodes, edges: newEdges });
   };
 
   const handleMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {

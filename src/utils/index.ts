@@ -1,5 +1,11 @@
 import { Direction, NodeAnchorPosition, Offset } from '../interface';
 
+export function getElementPos(ele: HTMLElement) {
+  const x = parseInt(ele.style.left.replace('px', ''), 10);
+  const y = parseInt(ele.style.top.replace('px', ''), 10);
+  return { x, y };
+}
+
 /**
  * 获取元素的坐标和宽高
  *
@@ -8,8 +14,7 @@ import { Direction, NodeAnchorPosition, Offset } from '../interface';
  */
 function getBoundingClientRect(ele: HTMLElement) {
   const { width, height } = ele.getBoundingClientRect();
-  const x = parseInt(ele.style.left.replace('px', ''), 10);
-  const y = parseInt(ele.style.top.replace('px', ''), 10);
+  const { x, y } = getElementPos(ele);
   return { x, y, width, height };
 }
 

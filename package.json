@@ -1,6 +1,6 @@
 {
   "name": "react-flow-editor2",
-  "version": "0.0.4",
+  "version": "0.0.1",
   "description": "React Flow Editor Component",
   "engines": {
     "node": ">=8.x"

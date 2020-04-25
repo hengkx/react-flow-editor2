@@ -1,6 +1,6 @@
 # react-flow-editor2
 
-React Flow Editor.
+React Flow Editor.1
 
 [![NPM version][npm-image]][npm-url] [![build status][circleci-image]][circleci-url] [![Test coverage][coveralls-image]][coveralls-url] [![node version][node-image]][node-url] [![npm download][download-image]][download-url]
 
